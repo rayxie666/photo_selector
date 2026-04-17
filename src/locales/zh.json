@@ -1,0 +1,82 @@
+{
+  "app": {
+    "title": "照片筛选器",
+    "subtitle": "根据曝光和明暗度预筛选照片"
+  },
+  "upload": {
+    "title": "上传照片",
+    "dragDrop": "将照片拖放到此处",
+    "or": "或",
+    "selectFiles": "选择文件",
+    "supportedFormats": "支持格式：JPEG、PNG、WebP、HEIC、CR2、NEF、ARW、DNG",
+    "processing": "处理中...",
+    "uploading": "正在上传照片..."
+  },
+  "analysis": {
+    "exposure": "曝光",
+    "brightness": "明暗度",
+    "overexposed": "过曝",
+    "underexposed": "欠曝",
+    "correct": "正常",
+    "tooDark": "过暗",
+    "tooBright": "过亮",
+    "clippedHighlights": "高光溢出",
+    "clippedShadows": "暗部溢出",
+    "analyzing": "分析中...",
+    "grayFlat": "死灰",
+    "pureBlack": "死黑",
+    "blurry": "虚焦"
+  },
+  "gallery": {
+    "title": "照片库",
+    "empty": "尚未上传任何照片",
+    "flagged": "已标记",
+    "total": "总计",
+    "selected": "已选择"
+  },
+  "filter": {
+    "all": "全部",
+    "flagged": "已标记",
+    "good": "正常"
+  },
+  "actions": {
+    "selectAllFlagged": "选择所有已标记",
+    "deselectAll": "取消全选",
+    "delete": "删除",
+    "deleteSelected": "删除所选",
+    "saveSelected": "保存所选",
+    "saveSuccess": "已成功保存 {{count}} 张照片",
+    "savingProgress": "正在保存 {{current}}/{{total}}...",
+    "flag": "标记",
+    "unflag": "取消标记"
+  },
+  "settings": {
+    "title": "设置",
+    "brightnessThresholds": "明暗度阈值",
+    "darkThreshold": "过暗阈值",
+    "brightThreshold": "过亮阈值",
+    "exposureSensitivity": "曝光敏感度",
+    "highlightClipThreshold": "高光溢出阈值",
+    "shadowClipThreshold": "暗部溢出阈值",
+    "qualityDetection": "画质检测",
+    "grayFlatThreshold": "死灰饱和度阈值 / Gray-flat Threshold",
+    "pureBlackThreshold": "死黑像素占比阈值 / Pure-black Threshold",
+    "blurThreshold": "虚焦方差阈值 / Blur Threshold",
+    "resetDefaults": "恢复默认",
+    "save": "保存",
+    "cancel": "取消"
+  },
+  "language": {
+    "en": "English",
+    "zh": "中文"
+  },
+  "errors": {
+    "unsupportedFormat": "不支持的文件格式",
+    "loadFailed": "加载图片失败",
+    "analysisFailed": "分析失败",
+    "saveFolder": "已保存 {{saved}} 张，{{failed}} 张保存失败"
+  },
+  "info": {
+    "browserNotSupported": "此功能需要 Chrome 或 Edge 浏览器"
+  }
+}

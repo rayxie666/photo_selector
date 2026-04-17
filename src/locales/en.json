@@ -1,0 +1,82 @@
+{
+  "app": {
+    "title": "Photo Selector",
+    "subtitle": "Pre-filter photos by exposure and brightness"
+  },
+  "upload": {
+    "title": "Upload Photos",
+    "dragDrop": "Drag and drop photos here",
+    "or": "or",
+    "selectFiles": "Select Files",
+    "supportedFormats": "Supported formats: JPEG, PNG, WebP, HEIC, CR2, NEF, ARW, DNG",
+    "processing": "Processing...",
+    "uploading": "Uploading photos..."
+  },
+  "analysis": {
+    "exposure": "Exposure",
+    "brightness": "Brightness",
+    "overexposed": "Overexposed",
+    "underexposed": "Underexposed",
+    "correct": "Correct",
+    "tooDark": "Too Dark",
+    "tooBright": "Too Bright",
+    "clippedHighlights": "Clipped Highlights",
+    "clippedShadows": "Clipped Shadows",
+    "analyzing": "Analyzing...",
+    "grayFlat": "Gray-flat",
+    "pureBlack": "Pure Black",
+    "blurry": "Blurry"
+  },
+  "gallery": {
+    "title": "Photo Gallery",
+    "empty": "No photos uploaded yet",
+    "flagged": "flagged",
+    "total": "total",
+    "selected": "selected"
+  },
+  "filter": {
+    "all": "All",
+    "flagged": "Flagged",
+    "good": "Good"
+  },
+  "actions": {
+    "selectAllFlagged": "Select All Flagged",
+    "deselectAll": "Deselect All",
+    "delete": "Delete",
+    "deleteSelected": "Delete Selected",
+    "saveSelected": "Save Selected",
+    "saveSuccess": "Successfully saved {{count}} photos",
+    "savingProgress": "Saving {{current}}/{{total}}...",
+    "flag": "Flag",
+    "unflag": "Unflag"
+  },
+  "settings": {
+    "title": "Settings",
+    "brightnessThresholds": "Brightness Thresholds",
+    "darkThreshold": "Dark Threshold",
+    "brightThreshold": "Bright Threshold",
+    "exposureSensitivity": "Exposure Sensitivity",
+    "highlightClipThreshold": "Highlight Clip Threshold",
+    "shadowClipThreshold": "Shadow Clip Threshold",
+    "qualityDetection": "Quality Detection",
+    "grayFlatThreshold": "Gray-flat Saturation Threshold",
+    "pureBlackThreshold": "Pure-black Pixel Ratio Threshold",
+    "blurThreshold": "Blur Variance Threshold",
+    "resetDefaults": "Reset to Defaults",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "language": {
+    "en": "English",
+    "zh": "中文"
+  },
+  "errors": {
+    "unsupportedFormat": "Unsupported file format",
+    "loadFailed": "Failed to load image",
+    "analysisFailed": "Analysis failed",
+    "saveFolder": "Saved {{saved}} photos, {{failed}} failed"
+  },
+  "info": {
+    "browserNotSupported": "This feature requires Chrome or Edge"
+  }
+}
