@@ -171,37 +171,8 @@ export function analyzeBrightness(meanLuminosity: number, settings: AnalysisSett
   return 'correct';
 }
 
-export async function analyzeImage(dataUrl: string, settings: AnalysisSettings): Promise<AnalysisResult> {
-  const img = await loadImageElement(dataUrl);
-
-  // Create canvas and draw image
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-
-  if (!ctx) {
-    throw new Error('Could not get canvas context');
-  }
-
-  // Use a smaller size for analysis to improve performance
-  const maxSize = 800;
-  let width = img.width;
-  let height = img.height;
-
-  if (width > maxSize || height > maxSize) {
-    if (width > height) {
-      height = (height / width) * maxSize;
-      width = maxSize;
-    } else {
-      width = (width / height) * maxSize;
-      height = maxSize;
-    }
-  }
-
-  canvas.width = width;
-  canvas.height = height;
-  ctx.drawImage(img, 0, 0, width, height);
-
-  const imageData = ctx.getImageData(0, 0, width, height);
+/** Pure CPU-bound analysis. Safe to run inside a Web Worker — no DOM access. */
+export function analyzeImageData(imageData: ImageData, settings: AnalysisSettings): AnalysisResult {
   const histogram = calculateHistogram(imageData);
   const meanLuminosity = calculateMeanLuminosity(histogram);
 
@@ -213,6 +184,8 @@ export async function analyzeImage(dataUrl: string, settings: AnalysisSettings):
   const isPureBlack = detectPureBlack(histogram, settings.pureBlackThreshold);
   const isBlurry = detectBlur(imageData, settings.blurThreshold);
 
+  // isFlagged means "this photo should enter rejected_tech in the pipeline state machine".
+  // Consumers should not treat this as a soft warning — it is the Stage 1 reject signal.
   const isFlagged =
     exposureStatus !== 'correct' ||
     brightnessStatus !== 'correct' ||
@@ -233,4 +206,30 @@ export async function analyzeImage(dataUrl: string, settings: AnalysisSettings):
     isBlurry,
     isFlagged,
   };
+}
+
+/** Main-thread wrapper — kept for any callers that still pass a data URL. */
+export async function analyzeImage(dataUrl: string, settings: AnalysisSettings): Promise<AnalysisResult> {
+  const img = await loadImageElement(dataUrl);
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Could not get canvas context');
+
+  const maxSize = 800;
+  let width = img.width;
+  let height = img.height;
+  if (width > maxSize || height > maxSize) {
+    if (width > height) {
+      height = (height / width) * maxSize;
+      width = maxSize;
+    } else {
+      width = (width / height) * maxSize;
+      height = maxSize;
+    }
+  }
+  canvas.width = width;
+  canvas.height = height;
+  ctx.drawImage(img, 0, 0, width, height);
+  const imageData = ctx.getImageData(0, 0, width, height);
+  return analyzeImageData(imageData, settings);
 }

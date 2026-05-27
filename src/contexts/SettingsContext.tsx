@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import type { AnalysisSettings } from '@/types';
 
-const DEFAULT_SETTINGS: AnalysisSettings = {
+export const DEFAULT_SETTINGS: AnalysisSettings = {
   darkThreshold: 40,
   brightThreshold: 200,
   exposureSensitivity: 0.5,
@@ -10,6 +10,9 @@ const DEFAULT_SETTINGS: AnalysisSettings = {
   grayFlatThreshold: 15,
   pureBlackThreshold: 60,
   blurThreshold: 100,
+  stage2RejectionRatio: 0.3,
+  stage3ClusterEps: 0.25,
+  llmProviderId: 'claude-cli',
 };
 
 const STORAGE_KEY = 'photo-selector-settings';

@@ -5,9 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { usePhotoContext } from '@/contexts/PhotoContext';
-import { processImageFile } from '@/utils/imageProcessor';
-import { analyzeImage } from '@/utils/imageAnalysis';
 import { useSettings } from '@/contexts/SettingsContext';
+import { runStage1ForFile } from '@/services/pipeline/stage1';
+import type { Photo } from '@/types';
 
 const SUPPORTED_FORMATS = [
   'image/jpeg',
@@ -18,7 +18,13 @@ const SUPPORTED_FORMATS = [
   '.nef',
   '.arw',
   '.dng',
+  '.3fr',
+  '.fff',
 ];
+
+// Chunk processed concurrently before flushing to React state.
+// Larger = fewer re-renders, smaller = smoother progress bar.
+const BATCH_SIZE = 8;
 
 export function PhotoUploader() {
   const { t } = useTranslation();
@@ -29,52 +35,65 @@ export function PhotoUploader() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  const processFiles = useCallback(async (files: FileList | File[]) => {
-    const fileArray = Array.from(files);
-    if (fileArray.length === 0) return;
+  const processFiles = useCallback(
+    async (files: FileList | File[]) => {
+      const fileArray = Array.from(files);
+      if (fileArray.length === 0) return;
 
-    setIsProcessing(true);
-    setProgress(0);
+      setIsProcessing(true);
+      setProgress(0);
 
-    for (let i = 0; i < fileArray.length; i++) {
-      const file = fileArray[i];
+      let processed = 0;
+      for (let i = 0; i < fileArray.length; i += BATCH_SIZE) {
+        const chunk = fileArray.slice(i, i + BATCH_SIZE);
+        const photos = await Promise.all(
+          chunk.map(async (file): Promise<Photo | null> => {
+            try {
+              const outcome = await runStage1ForFile(file, settings);
+              return {
+                id: crypto.randomUUID(),
+                file,
+                name: file.name,
+                thumbnailUrl: outcome.thumbnailUrl,
+                analysis: outcome.analysis,
+                status: outcome.status,
+                rejectionReason: outcome.rejectionReason,
+                isSelected: false,
+              };
+            } catch (error) {
+              console.error(`Failed to process ${file.name}:`, error);
+              return null;
+            }
+          }),
+        );
 
-      try {
-        const imageData = await processImageFile(file);
-        const analysis = await analyzeImage(imageData, settings);
+        const valid = photos.filter((p): p is Photo => p !== null);
+        if (valid.length > 0) {
+          dispatch({ type: 'ADD_PHOTOS', payload: valid });
+        }
 
-        dispatch({
-          type: 'ADD_PHOTO',
-          payload: {
-            id: crypto.randomUUID(),
-            file,
-            name: file.name,
-            thumbnailUrl: imageData,
-            analysis,
-            isSelected: false,
-            isManuallyFlagged: false,
-          },
-        });
-      } catch (error) {
-        console.error(`Failed to process ${file.name}:`, error);
+        processed += chunk.length;
+        setProgress((processed / fileArray.length) * 100);
       }
 
-      setProgress(((i + 1) / fileArray.length) * 100);
-    }
+      setIsProcessing(false);
+      setProgress(0);
+    },
+    [dispatch, settings],
+  );
 
-    setIsProcessing(false);
-    setProgress(0);
-  }, [dispatch, settings]);
-
-  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      processFiles(files);
-    }
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  }, [processFiles]);
+  const handleFileSelect = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const files = e.target.files;
+      if (files) {
+        processFiles(files);
+      }
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    },
+    [processFiles],
+  );
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -86,15 +105,18 @@ export function PhotoUploader() {
     setIsDragOver(false);
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(false);
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragOver(false);
 
-    const files = e.dataTransfer.files;
-    if (files) {
-      processFiles(files);
-    }
-  }, [processFiles]);
+      const files = e.dataTransfer.files;
+      if (files) {
+        processFiles(files);
+      }
+    },
+    [processFiles],
+  );
 
   const handleClick = useCallback(() => {
     fileInputRef.current?.click();
@@ -109,9 +131,10 @@ export function PhotoUploader() {
           className={`
             relative border-2 border-dashed rounded-lg p-8 text-center
             transition-colors cursor-pointer
-            ${isDragOver
-              ? 'border-primary bg-primary/5'
-              : 'border-muted-foreground/25 hover:border-primary/50'
+            ${
+              isDragOver
+                ? 'border-primary bg-primary/5'
+                : 'border-muted-foreground/25 hover:border-primary/50'
             }
           `}
           onDragOver={handleDragOver}

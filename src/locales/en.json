@@ -8,7 +8,7 @@
     "dragDrop": "Drag and drop photos here",
     "or": "or",
     "selectFiles": "Select Files",
-    "supportedFormats": "Supported formats: JPEG, PNG, WebP, HEIC, CR2, NEF, ARW, DNG",
+    "supportedFormats": "Supported formats: JPEG, PNG, WebP, HEIC, CR2, NEF, ARW, DNG, 3FR, FFF",
     "processing": "Processing...",
     "uploading": "Uploading photos..."
   },
@@ -27,28 +27,93 @@
     "pureBlack": "Pure Black",
     "blurry": "Blurry"
   },
+  "status": {
+    "pending": "Pending",
+    "rejected_tech": "Tech reject",
+    "rejected_ai": "AI reject",
+    "rejected_pk": "PK reject",
+    "finalist": "Finalist"
+  },
+  "stage": {
+    "technical": "Technical filter",
+    "aesthetic": "Aesthetic ranking",
+    "comparison": "Similarity PK"
+  },
+  "pipeline": {
+    "passed": "Passed",
+    "rejected": "Rejected",
+    "scored": "Scored",
+    "comingSoon": "Coming soon",
+    "aestheticHint": "AI scores composition, style, and aesthetic appeal",
+    "comparisonHint": "Side-by-side comparison for burst / similar photo groups",
+    "runAesthetic": "Run AI Ranking",
+    "explainRejections": "Explain rejections",
+    "explainProgress": "Explaining {{done}} / {{total}}…",
+    "explainDone": "Explained {{total}} photos",
+    "runSimilarity": "Run Similarity",
+    "runAgain": "Re-run",
+    "backendOffline": "Backend is not running — start it with `uv run uvicorn app.main:app`",
+    "noPendingPhotos": "No pending photos to score",
+    "allProcessed": "All photos already processed — restore some from rejected/finalist, or upload more.",
+    "groups": "PK groups",
+    "autoFinalists": "Auto finalists",
+    "pendingPK": "Pending PK",
+    "cluster": "Cluster",
+    "phase_preparing": "Preparing thumbnails…",
+    "phase_scoring": "Scoring with AI… (first run downloads the model)",
+    "phase_clustering": "Clustering by similarity… (first run downloads CLIP)",
+    "phase_finalizing": "Applying results…",
+    "phase_done": "Done"
+  },
+  "reason": {
+    "overexposed": "Overexposed",
+    "underexposed": "Underexposed",
+    "too_dark": "Too dark",
+    "too_bright": "Too bright",
+    "clipped_highlights": "Clipped highlights",
+    "clipped_shadows": "Clipped shadows",
+    "gray_flat": "Gray-flat",
+    "pure_black": "Pure black",
+    "blurry": "Blurry",
+    "technical": "Technical defect",
+    "manual": "Manually rejected",
+    "low_aesthetic_score": "Low aesthetic score",
+    "lost_pk": "Lost head-to-head"
+  },
   "gallery": {
     "title": "Photo Gallery",
     "empty": "No photos uploaded yet",
     "flagged": "flagged",
     "total": "total",
-    "selected": "selected"
+    "selected": "selected",
+    "finalists": "finalists",
+    "loadingMore": "Showing {{shown}} of {{total}} — scroll to load more"
   },
   "filter": {
     "all": "All",
-    "flagged": "Flagged",
-    "good": "Good"
+    "pending": "Pending",
+    "rejected_tech": "Tech rejects",
+    "rejected_ai": "AI rejects",
+    "rejected_pk": "PK rejects",
+    "finalist": "Finalists"
   },
   "actions": {
-    "selectAllFlagged": "Select All Flagged",
     "deselectAll": "Deselect All",
-    "delete": "Delete",
-    "deleteSelected": "Delete Selected",
+    "selectAll": "Select All",
+    "selectAllHint": "Select every photo in the current view",
+    "allAlreadySelected": "All visible photos are already selected",
+    "markRejected": "Mark as Rejected",
+    "markFinalist": "Mark as Finalist",
+    "restore": "Restore",
+    "selectOne": "Select",
+    "openLightbox": "Enlarge",
+    "startPK": "Start PK",
+    "restoreAllTech": "Restore all tech rejects",
+    "restoreAllAi": "Restore all AI rejects",
+    "restoreAllPk": "Restore all PK rejects",
     "saveSelected": "Save Selected",
     "saveSuccess": "Successfully saved {{count}} photos",
-    "savingProgress": "Saving {{current}}/{{total}}...",
-    "flag": "Flag",
-    "unflag": "Unflag"
+    "savingProgress": "Saving {{current}}/{{total}}..."
   },
   "settings": {
     "title": "Settings",
@@ -62,6 +127,15 @@
     "grayFlatThreshold": "Gray-flat Saturation Threshold",
     "pureBlackThreshold": "Pure-black Pixel Ratio Threshold",
     "blurThreshold": "Blur Variance Threshold",
+    "aiPipeline": "AI Pipeline",
+    "stage2RejectionRatio": "Stage 2 reject ratio",
+    "stage3ClusterEps": "Stage 3 similarity threshold (eps)",
+    "stage3ClusterEpsHint": "Higher = more photos grouped together. Try 0.30–0.40 if similar photos aren't grouping.",
+    "llmProvider": "LLM Provider",
+    "llmProviderId": "Provider",
+    "llmProviderHint": "Claude Code CLI uses your local subscription with no setup. Cloud providers need an API key.",
+    "llmApiKey": "API Key",
+    "llmApiKeyHint": "Stored in your browser's localStorage. The backend forwards it but never persists it.",
     "resetDefaults": "Reset to Defaults",
     "save": "Save",
     "cancel": "Cancel"
@@ -69,6 +143,38 @@
   "language": {
     "en": "English",
     "zh": "中文"
+  },
+  "theme": {
+    "label": "Color theme",
+    "system": "Follow system",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "critique": {
+    "title": "AI Critique",
+    "askWhy": "Why?",
+    "regenerate": "Re-critique",
+    "loading": "Asking the model…",
+    "apiKeyMissing": "Set an API key in Settings, or switch to Claude Code CLI.",
+    "composition": "Composition",
+    "style": "Style",
+    "suggestion": "Suggestion",
+    "viaProvider": "via {{provider}}"
+  },
+  "pk": {
+    "title": "Pairwise PK",
+    "noClusters": "No groups need PK — every photo passed clustering as a singleton.",
+    "clusterProgress": "Cluster {{current}} of {{total}}",
+    "roundProgress": "Round {{round}} of {{max}}",
+    "pickLeft": "Pick Left",
+    "pickRight": "Pick Right",
+    "keepBoth": "Keep Both",
+    "undo": "Undo",
+    "skipUseAi": "Skip (AI picks)",
+    "aiSuggests": "AI suggests",
+    "exit": "Close",
+    "done": "PK complete: {{finalists}} finalists, {{losers}} eliminated.",
+    "zoomHint": "Ctrl/⌘ + scroll (or pinch) to zoom · drag to pan · double-click reset · K Keep Both · Z Undo"
   },
   "errors": {
     "unsupportedFormat": "Unsupported file format",

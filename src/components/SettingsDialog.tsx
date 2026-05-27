@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
-import { useSettings } from '@/contexts/SettingsContext';
+import { useSettings, DEFAULT_SETTINGS } from '@/contexts/SettingsContext';
 import type { AnalysisSettings } from '@/types';
 
 export function SettingsDialog() {
@@ -34,16 +34,7 @@ export function SettingsDialog() {
 
   const handleReset = () => {
     resetToDefaults();
-    setLocalSettings({
-      darkThreshold: 40,
-      brightThreshold: 200,
-      exposureSensitivity: 0.5,
-      highlightClipThreshold: 0.05,
-      shadowClipThreshold: 0.05,
-      grayFlatThreshold: 15,
-      pureBlackThreshold: 60,
-      blurThreshold: 100,
-    });
+    setLocalSettings(DEFAULT_SETTINGS);
   };
 
   return (
@@ -151,6 +142,94 @@ export function SettingsDialog() {
                 }
               />
             </div>
+          </div>
+
+          <div className="space-y-4">
+            <h4 className="font-medium">{t('settings.aiPipeline')}</h4>
+
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>{t('settings.stage2RejectionRatio')}</span>
+                <span className="text-muted-foreground">
+                  {(localSettings.stage2RejectionRatio * 100).toFixed(0)}%
+                </span>
+              </div>
+              <Slider
+                value={[localSettings.stage2RejectionRatio]}
+                min={0.1}
+                max={0.6}
+                step={0.05}
+                onValueChange={([value]) =>
+                  setLocalSettings((s) => ({ ...s, stage2RejectionRatio: value }))
+                }
+              />
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>{t('settings.stage3ClusterEps')}</span>
+                <span className="text-muted-foreground">
+                  {localSettings.stage3ClusterEps.toFixed(2)}
+                </span>
+              </div>
+              <Slider
+                value={[localSettings.stage3ClusterEps]}
+                min={0.05}
+                max={0.5}
+                step={0.01}
+                onValueChange={([value]) =>
+                  setLocalSettings((s) => ({ ...s, stage3ClusterEps: value }))
+                }
+              />
+              <p className="text-xs text-muted-foreground">
+                {t('settings.stage3ClusterEpsHint')}
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <h4 className="font-medium">{t('settings.llmProvider')}</h4>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">{t('settings.llmProviderId')}</label>
+              <select
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                value={localSettings.llmProviderId}
+                onChange={(e) =>
+                  setLocalSettings((s) => ({
+                    ...s,
+                    llmProviderId: e.target.value as AnalysisSettings['llmProviderId'],
+                  }))
+                }
+              >
+                <option value="claude-cli">Claude Code CLI (zero-config)</option>
+                <option value="openai">OpenAI (gpt-4o)</option>
+                <option value="anthropic">Anthropic (Claude Sonnet 4.5)</option>
+                <option value="google">Google (Gemini 2.5 Flash)</option>
+              </select>
+              <p className="text-xs text-muted-foreground">
+                {t('settings.llmProviderHint')}
+              </p>
+            </div>
+
+            {localSettings.llmProviderId !== 'claude-cli' && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium">{t('settings.llmApiKey')}</label>
+                <input
+                  type="password"
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-mono"
+                  value={localSettings.llmApiKey ?? ''}
+                  onChange={(e) =>
+                    setLocalSettings((s) => ({ ...s, llmApiKey: e.target.value }))
+                  }
+                  placeholder="sk-..."
+                  autoComplete="off"
+                />
+                <p className="text-xs text-muted-foreground">
+                  {t('settings.llmApiKeyHint')}
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="space-y-4">

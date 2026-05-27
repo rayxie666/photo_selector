@@ -2,11 +2,14 @@ import { useTranslation } from 'react-i18next';
 import { Camera } from 'lucide-react';
 import { PhotoProvider } from '@/contexts/PhotoContext';
 import { SettingsProvider } from '@/contexts/SettingsContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import { PhotoUploader } from '@/components/PhotoUploader';
 import { PhotoGallery } from '@/components/PhotoGallery';
 import { FilterBar } from '@/components/FilterBar';
 import { SettingsDialog } from '@/components/SettingsDialog';
+import { PipelineProgress } from '@/components/PipelineProgress';
 
 function AppContent() {
   const { t } = useTranslation();
@@ -25,6 +28,7 @@ function AppContent() {
               </div>
             </div>
             <div className="flex items-center gap-2">
+              <ThemeSwitcher />
               <SettingsDialog />
               <LanguageSwitcher />
             </div>
@@ -36,6 +40,7 @@ function AppContent() {
       <main className="flex-1 container mx-auto px-4 py-6">
         <div className="space-y-6">
           <PhotoUploader />
+          <PipelineProgress />
           <FilterBar />
           <PhotoGallery />
         </div>
@@ -53,11 +58,13 @@ function AppContent() {
 
 function App() {
   return (
-    <SettingsProvider>
-      <PhotoProvider>
-        <AppContent />
-      </PhotoProvider>
-    </SettingsProvider>
+    <ThemeProvider>
+      <SettingsProvider>
+        <PhotoProvider>
+          <AppContent />
+        </PhotoProvider>
+      </SettingsProvider>
+    </ThemeProvider>
   );
 }
 

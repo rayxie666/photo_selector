@@ -8,7 +8,7 @@
     "dragDrop": "将照片拖放到此处",
     "or": "或",
     "selectFiles": "选择文件",
-    "supportedFormats": "支持格式：JPEG、PNG、WebP、HEIC、CR2、NEF、ARW、DNG",
+    "supportedFormats": "支持格式：JPEG、PNG、WebP、HEIC、CR2、NEF、ARW、DNG、3FR、FFF（哈苏）",
     "processing": "处理中...",
     "uploading": "正在上传照片..."
   },
@@ -27,28 +27,93 @@
     "pureBlack": "死黑",
     "blurry": "虚焦"
   },
+  "status": {
+    "pending": "待筛选",
+    "rejected_tech": "技术淘汰",
+    "rejected_ai": "AI 淘汰",
+    "rejected_pk": "PK 淘汰",
+    "finalist": "入选"
+  },
+  "stage": {
+    "technical": "技术筛选",
+    "aesthetic": "AI 美学排序",
+    "comparison": "相似组对比"
+  },
+  "pipeline": {
+    "passed": "通过",
+    "rejected": "淘汰",
+    "scored": "已评分",
+    "comingSoon": "即将上线",
+    "aestheticHint": "AI 评估构图、风格与审美",
+    "comparisonHint": "对连拍/相似组做两两 PK",
+    "runAesthetic": "运行 AI 排序",
+    "explainRejections": "解释淘汰原因",
+    "explainProgress": "正在解释 {{done}} / {{total}}…",
+    "explainDone": "已解释 {{total}} 张照片",
+    "runSimilarity": "运行相似度聚类",
+    "runAgain": "重新运行",
+    "backendOffline": "后端未启动，请用 `uv run uvicorn app.main:app` 启动",
+    "noPendingPhotos": "没有待筛选的照片",
+    "allProcessed": "所有照片都已处理 —— 从淘汰/入选里恢复一些，或继续上传新照片。",
+    "groups": "PK 组",
+    "autoFinalists": "自动入选",
+    "pendingPK": "待 PK",
+    "cluster": "组",
+    "phase_preparing": "准备缩略图...",
+    "phase_scoring": "AI 评分中... (首次运行会下载模型)",
+    "phase_clustering": "按相似度聚类中... (首次运行会下载 CLIP)",
+    "phase_finalizing": "应用结果...",
+    "phase_done": "完成"
+  },
+  "reason": {
+    "overexposed": "过曝",
+    "underexposed": "欠曝",
+    "too_dark": "过暗",
+    "too_bright": "过亮",
+    "clipped_highlights": "高光溢出",
+    "clipped_shadows": "暗部溢出",
+    "gray_flat": "死灰",
+    "pure_black": "死黑",
+    "blurry": "虚焦",
+    "technical": "技术缺陷",
+    "manual": "手动淘汰",
+    "low_aesthetic_score": "美学评分低",
+    "lost_pk": "PK 落败"
+  },
   "gallery": {
     "title": "照片库",
     "empty": "尚未上传任何照片",
     "flagged": "已标记",
     "total": "总计",
-    "selected": "已选择"
+    "selected": "已选择",
+    "finalists": "入选",
+    "loadingMore": "已显示 {{shown}} / {{total}} 张，下滚加载更多"
   },
   "filter": {
     "all": "全部",
-    "flagged": "已标记",
-    "good": "正常"
+    "pending": "待筛选",
+    "rejected_tech": "技术淘汰",
+    "rejected_ai": "AI 淘汰",
+    "rejected_pk": "PK 淘汰",
+    "finalist": "入选"
   },
   "actions": {
-    "selectAllFlagged": "选择所有已标记",
     "deselectAll": "取消全选",
-    "delete": "删除",
-    "deleteSelected": "删除所选",
+    "selectAll": "全选",
+    "selectAllHint": "选中当前视图里所有照片",
+    "allAlreadySelected": "当前可见照片已全部选中",
+    "markRejected": "标为淘汰",
+    "markFinalist": "标为入选",
+    "restore": "恢复",
+    "selectOne": "选择",
+    "openLightbox": "放大",
+    "startPK": "开始 PK",
+    "restoreAllTech": "恢复所有技术淘汰",
+    "restoreAllAi": "恢复所有 AI 淘汰",
+    "restoreAllPk": "恢复所有 PK 淘汰",
     "saveSelected": "保存所选",
     "saveSuccess": "已成功保存 {{count}} 张照片",
-    "savingProgress": "正在保存 {{current}}/{{total}}...",
-    "flag": "标记",
-    "unflag": "取消标记"
+    "savingProgress": "正在保存 {{current}}/{{total}}..."
   },
   "settings": {
     "title": "设置",
@@ -62,6 +127,15 @@
     "grayFlatThreshold": "死灰饱和度阈值 / Gray-flat Threshold",
     "pureBlackThreshold": "死黑像素占比阈值 / Pure-black Threshold",
     "blurThreshold": "虚焦方差阈值 / Blur Threshold",
+    "aiPipeline": "AI 流水线",
+    "stage2RejectionRatio": "Stage 2 淘汰比例",
+    "stage3ClusterEps": "Stage 3 相似度阈值 (eps)",
+    "stage3ClusterEpsHint": "数值越大，越多照片会聚到同一组。如果相似照片没被识别，试试 0.30–0.40。",
+    "llmProvider": "AI 大模型",
+    "llmProviderId": "选用",
+    "llmProviderHint": "Claude Code CLI 使用本地订阅，无需配置；其它需 API Key。",
+    "llmApiKey": "API Key",
+    "llmApiKeyHint": "存在浏览器 localStorage；后端只转发，不持久化。",
     "resetDefaults": "恢复默认",
     "save": "保存",
     "cancel": "取消"
@@ -69,6 +143,38 @@
   "language": {
     "en": "English",
     "zh": "中文"
+  },
+  "theme": {
+    "label": "外观主题",
+    "system": "跟随系统",
+    "light": "明亮",
+    "dark": "暗色"
+  },
+  "critique": {
+    "title": "AI 点评",
+    "askWhy": "为什么？",
+    "regenerate": "重新点评",
+    "loading": "AI 评估中…",
+    "apiKeyMissing": "请在设置中填写 API Key，或切换到 Claude Code CLI。",
+    "composition": "构图",
+    "style": "风格",
+    "suggestion": "建议",
+    "viaProvider": "来自 {{provider}}"
+  },
+  "pk": {
+    "title": "两两 PK",
+    "noClusters": "没有需要 PK 的组——所有照片都已自动入选。",
+    "clusterProgress": "第 {{current}} 组 / 共 {{total}} 组",
+    "roundProgress": "第 {{round}} 轮 / 共 {{max}} 轮",
+    "pickLeft": "选左边",
+    "pickRight": "选右边",
+    "keepBoth": "两张都留",
+    "undo": "撤销上一步",
+    "skipUseAi": "跳过（AI 选）",
+    "aiSuggests": "AI 推荐",
+    "exit": "关闭",
+    "done": "PK 完成：{{finalists}} 张入选，{{losers}} 张淘汰。",
+    "zoomHint": "Ctrl/⌘+滚轮 缩放 · 拖动平移 · 双击复位 · K 两张都留 · Z 撤销"
   },
   "errors": {
     "unsupportedFormat": "不支持的文件格式",

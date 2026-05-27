@@ -1,0 +1,30 @@
+[project]
+name = "photo-selector-backend"
+version = "0.1.0"
+description = "Local AI backend for Photo Selector — aesthetic ranking, CLIP similarity, LLM routing"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "pydantic-settings>=2.5",
+    "python-multipart>=0.0.10",
+    "torch>=2.12.0",
+    "torchvision>=0.27.0",
+    "open-clip-torch>=3.3.0",
+    "pillow>=12.2.0",
+    "numpy>=2.4.6",
+    "huggingface-hub>=1.16.1",
+    "openai>=2.38.0",
+    "anthropic>=0.104.1",
+    "google-genai>=2.6.0",
+    "scikit-learn>=1.8.0",
+]
+
+# Dependencies added later, when their feature lands:
+#   chapter 5 (RAW input):       rawpy
+
+[tool.uv]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

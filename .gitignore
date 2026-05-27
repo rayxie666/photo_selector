@@ -1,0 +1,30 @@
+# Dependency artifacts
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+
+# Vite caches
+.vite/
+node_modules/.vite/
+node_modules/.tmp/
+
+# Python backend
+backend/.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Local env
+.env
+.env.local
+backend/.env
+backend/.env.local
